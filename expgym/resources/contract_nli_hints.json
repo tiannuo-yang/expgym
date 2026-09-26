@@ -1,0 +1,228 @@
+[
+  {
+    "doc_id": 1,
+    "span_to_dimension": {
+      "25": "Core scope",
+      "32": "Asset class",
+      "37": "Handling rules",
+      "38": "Access gating",
+      "44": "Use boundary",
+      "45": "Rights boundary",
+      "49": "Integrity control",
+      "50": "Use exclusivity",
+      "53": "Activity ban",
+      "55": "Care level",
+      "60": "Exit protocol",
+      "63": "Carveout set",
+      "66": "External channel",
+      "67": "Independent path",
+      "71": "Compelled channel",
+      "76": "Survival rule",
+      "84": "Exit package",
+      "85": "Closure gate A",
+      "86": "Closure gate B"
+    }
+  },
+  {
+    "doc_id": 2,
+    "span_to_dimension": {
+      "15": "Definition core",
+      "16": "Marking rule",
+      "17": "Context test",
+      "18": "Scope breadth",
+      "22": "Employee access",
+      "23": "Advisor gate",
+      "24": "Technical probing",
+      "27": "Survival term",
+      "33": "Carveout set",
+      "36": "External channel",
+      "37": "Independent path",
+      "45": "Exit protocol",
+      "48": "Notice duty",
+      "57": "Rights boundary",
+      "64": "Parallel track",
+      "86": "Section carryover"
+    }
+  },
+  {
+    "doc_id": 4,
+    "span_to_dimension": {
+      "5": "Use boundary",
+      "7": "Form scope",
+      "11": "No retention",
+      "12": "Rights boundary",
+      "13": "Survival rule"
+    }
+  },
+  {
+    "doc_id": 5,
+    "span_to_dimension": {
+      "3": "Recipient accountability",
+      "5": "Definition scope",
+      "6": "Channel scope",
+      "9": "Deal existence",
+      "21": "Compelled notice"
+    }
+  },
+  {
+    "doc_id": 6,
+    "span_to_dimension": {
+      "12": "Scope breadth",
+      "13": "Affiliate scope",
+      "14": "Carveout set",
+      "16": "External channel",
+      "18": "Independent path",
+      "20": "Use boundary",
+      "23": "Copy constraint",
+      "24": "Vicarious liability",
+      "29": "Ownership anchor",
+      "32": "Exit protocol",
+      "33": "Survival rule"
+    }
+  },
+  {
+    "doc_id": 8,
+    "span_to_dimension": {
+      "3": "Subject scope",
+      "7": "Flexible identification",
+      "9": "Clause anchor",
+      "10": "Use boundary"
+    }
+  },
+  {
+    "doc_id": 11,
+    "span_to_dimension": {
+      "13": "Scope breadth",
+      "15": "Duty list",
+      "17": "Use boundary",
+      "18": "Access rule",
+      "19": "Need basis",
+      "20": "Binding gate",
+      "24": "Carveout set",
+      "28": "External channel",
+      "31": "Independent path",
+      "36": "Advisor binding",
+      "38": "Rights boundary",
+      "48": "Exit protocol"
+    }
+  },
+  {
+    "doc_id": 18,
+    "span_to_dimension": {
+      "22": "Confidential duty",
+      "23": "Scope breadth",
+      "24": "Obligation list",
+      "25": "Conduct limits",
+      "29": "Perpetual term"
+    }
+  },
+  {
+    "doc_id": 21,
+    "span_to_dimension": {
+      "16": "Recipient set",
+      "19": "Definition scope",
+      "20": "Inclusion lead",
+      "21": "Deal secrecy",
+      "23": "Scope breadth",
+      "24": "Carveout set",
+      "27": "External channel",
+      "28": "Independent path",
+      "31": "Obligation core",
+      "32": "Care level",
+      "33": "Use boundary",
+      "37": "Disclosure channel",
+      "38": "Representative channel",
+      "39": "Compelled notice",
+      "42": "Exit protocol",
+      "43": "Exception gate",
+      "44": "Archive carveout",
+      "45": "Legal carveout",
+      "46": "Retained duty",
+      "49": "Rights boundary",
+      "62": "Survival term"
+    }
+  },
+  {
+    "doc_id": 22,
+    "span_to_dimension": {
+      "12": "Marking rule",
+      "16": "Duty core",
+      "17": "Confidential duty",
+      "18": "Use boundary",
+      "19": "Employee access",
+      "20": "Copy constraint",
+      "23": "Carveout set",
+      "26": "External channel",
+      "27": "Independent path",
+      "31": "Rights boundary",
+      "40": "Incident notice",
+      "64": "Survival term"
+    }
+  },
+  {
+    "doc_id": 23,
+    "span_to_dimension": {
+      "29": "Definition scope",
+      "32": "Negotiation scope",
+      "35": "Representative set",
+      "36": "Affiliate scope",
+      "37": "Contractor scope",
+      "38": "Role list",
+      "43": "Handling duties",
+      "45": "Use boundary",
+      "46": "Access gating",
+      "47": "Carveout set",
+      "51": "External channel",
+      "53": "Compelled channel",
+      "54": "Notice duty",
+      "55": "Timing cue",
+      "63": "Rights boundary",
+      "77": "Survival rule",
+      "78": "Special duration",
+      "83": "Exception gate",
+      "84": "Legal retention",
+      "85": "Archive retention",
+      "86": "Section marker"
+    }
+  },
+  {
+    "doc_id": 24,
+    "span_to_dimension": {
+      "11": "Definition scope",
+      "12": "Core scope",
+      "13": "Derived content",
+      "14": "Derivative set",
+      "15": "Onsite channel",
+      "17": "Recipient set",
+      "23": "Use boundary",
+      "24": "Clause anchor",
+      "25": "Rights boundary",
+      "26": "Survival rule",
+      "28": "Care duty",
+      "30": "Access gating",
+      "33": "Clause anchor",
+      "34": "Rule preface",
+      "35": "Actor scope",
+      "37": "Disclosure ban",
+      "38": "List lead",
+      "39": "Deal secrecy",
+      "47": "Clause anchor",
+      "48": "Carveout set",
+      "52": "Independent path"
+    }
+  },
+  {
+    "doc_id": 25,
+    "span_to_dimension": {
+      "25": "Definition scope",
+      "28": "External channel",
+      "29": "Independent path",
+      "32": "Disclosure rules",
+      "34": "Access gating",
+      "35": "Use boundary",
+      "42": "Rights boundary",
+      "47": "Survival term"
+    }
+  }
+]
+

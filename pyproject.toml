@@ -1,0 +1,29 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "expgym"
+version = "0.1.0"
+description = "Evaluating and scaling LLM agents under costly feedback (ExpGym and PoolAct)"
+readme = "README.md"
+license = {text = "MIT"}
+requires-python = ">=3.7"
+dependencies = ["numpy"]
+
+[project.optional-dependencies]
+search = ["pyarrow"]
+data = ["huggingface_hub", "pyarrow"]
+dev = ["pytest"]
+
+[project.scripts]
+expgym = "expgym.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["expgym*"]
+
+[tool.setuptools.package-data]
+expgym = ["resources/*.json"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

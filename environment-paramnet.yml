@@ -1,0 +1,23 @@
+# Python 3.7 environment for the ParamNet tuning tasks (HPOBench surrogates are
+# scikit-learn 0.23 models). NAS-Bench, search and audit tasks run on any
+# Python >= 3.7 and do not need this environment.
+#
+#   conda env create -f environment-paramnet.yml && conda activate expgym-paramnet
+name: expgym-paramnet
+channels:
+  - conda-forge
+dependencies:
+  - python=3.7
+  - numpy=1.18.5
+  - scipy=1.4.1
+  - scikit-learn=0.23.2
+  - pip
+  - pip:
+      - ConfigSpace==0.4.21
+      - Pyro4==4.80
+      - oslo.concurrency>=4.2.0
+      - importlib-metadata>=4,<7
+      - pyyaml
+      - requests
+      - tqdm
+      - pytest

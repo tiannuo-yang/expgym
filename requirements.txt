@@ -1,0 +1,4 @@
+numpy
+pyarrow           # search task
+huggingface_hub   # scripts/download_data.py
+pytest            # tests

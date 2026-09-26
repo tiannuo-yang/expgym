@@ -1,0 +1,174 @@
+{
+ "nasbench101/A": {
+  "best_config": {
+   "edge_0": 1,
+   "edge_1": 1,
+   "edge_10": 1,
+   "edge_11": 1,
+   "edge_12": 0,
+   "edge_13": 0,
+   "edge_14": 0,
+   "edge_15": 1,
+   "edge_16": 0,
+   "edge_17": 0,
+   "edge_18": 0,
+   "edge_19": 1,
+   "edge_2": 1,
+   "edge_20": 0,
+   "edge_3": 1,
+   "edge_4": 0,
+   "edge_5": 0,
+   "edge_6": 0,
+   "edge_7": 1,
+   "edge_8": 0,
+   "edge_9": 0,
+   "op_node_0": "conv1x1-bn-relu",
+   "op_node_1": "maxpool3x3",
+   "op_node_2": "conv3x3-bn-relu",
+   "op_node_3": "conv3x3-bn-relu",
+   "op_node_4": "conv1x1-bn-relu"
+  },
+  "best_cost": 4944.152099609375,
+  "best_perf": 0.9460803866386414,
+  "mean_perf": 0.24263886537343263
+ },
+ "nasbench101/B": {
+  "best_config": {
+   "edge_0": 1,
+   "edge_1": 17,
+   "edge_2": 5,
+   "edge_3": 18,
+   "edge_4": 11,
+   "edge_5": 20,
+   "edge_6": 19,
+   "edge_7": 14,
+   "edge_8": 12,
+   "op_node_0": "conv3x3-bn-relu",
+   "op_node_1": "conv3x3-bn-relu",
+   "op_node_2": "conv1x1-bn-relu",
+   "op_node_3": "conv1x1-bn-relu",
+   "op_node_4": "conv3x3-bn-relu"
+  },
+  "best_cost": 10302.56103515625,
+  "best_perf": 0.9489516615867615,
+  "mean_perf": 0.6941106312199186
+ },
+ "nasbench101/C": {
+  "best_config": {
+   "edge_0": 0.7770710669733291,
+   "edge_1": 0.25477809002622165,
+   "edge_10": 0.3768104980364503,
+   "edge_11": 0.4192897848337257,
+   "edge_12": 0.3871237620677397,
+   "edge_13": 0.6903011675595564,
+   "edge_14": 0.15907753995314156,
+   "edge_15": 0.07242107751410132,
+   "edge_16": 0.5818053839352654,
+   "edge_17": 0.1745553168606081,
+   "edge_18": 0.3758375739522476,
+   "edge_19": 0.09892630495537591,
+   "edge_2": 0.9984447512858446,
+   "edge_20": 0.9949313711944814,
+   "edge_3": 0.5138063904505409,
+   "edge_4": 0.6539722604924317,
+   "edge_5": 0.5980329448691261,
+   "edge_6": 0.0820270126688889,
+   "edge_7": 0.3739136947289785,
+   "edge_8": 0.20179383804764073,
+   "edge_9": 0.8422525542739685,
+   "num_edges": 8,
+   "op_node_0": "conv3x3-bn-relu",
+   "op_node_1": "conv1x1-bn-relu",
+   "op_node_2": "conv3x3-bn-relu",
+   "op_node_3": "conv3x3-bn-relu",
+   "op_node_4": "conv3x3-bn-relu"
+  },
+  "best_cost": 11203.863037109375,
+  "best_perf": 0.9455795884132385,
+  "mean_perf": 0.38039011737180256
+ },
+ "nasbench201/cifar10-valid": {
+  "best_config": {
+   "1<-0": "nor_conv_3x3",
+   "2<-0": "nor_conv_3x3",
+   "2<-1": "nor_conv_3x3",
+   "3<-0": "skip_connect",
+   "3<-1": "nor_conv_3x3",
+   "3<-2": "nor_conv_1x1"
+  },
+  "best_cost": 11310.049790075853,
+  "best_perf": 0.9160666665039063,
+  "mean_perf": 0.8364667252956648
+ },
+ "nasbench201/cifar100": {
+  "best_config": {
+   "1<-0": "nor_conv_3x3",
+   "2<-0": "nor_conv_3x3",
+   "2<-1": "nor_conv_3x3",
+   "3<-0": "skip_connect",
+   "3<-1": "nor_conv_3x3",
+   "3<-2": "nor_conv_3x3"
+  },
+  "best_cost": 18639.38294943741,
+  "best_perf": 0.7350333333333333,
+  "mean_perf": 0.6129386546666666
+ },
+ "nasbench201/imagenet16-120": {
+  "best_config": {
+   "1<-0": "nor_conv_1x1",
+   "2<-0": "nor_conv_1x1",
+   "2<-1": "nor_conv_3x3",
+   "3<-0": "skip_connect",
+   "3<-1": "nor_conv_3x3",
+   "3<-2": "nor_conv_3x3"
+  },
+  "best_cost": 50264.24991032642,
+  "best_perf": 0.4684444446478949,
+  "mean_perf": 0.33645719436737986
+ },
+ "paramnet/adult": {
+  "best_config": {
+   "average_units_per_layer_log2": 7.324009738220781,
+   "batch_size_log2": 6.098472236854863,
+   "dropout_0": 0.08225741992583968,
+   "dropout_1": 0.36273245535623816,
+   "final_lr_fraction_log2": -0.6830699507176297,
+   "initial_lr_log10": -2.7570209838434474,
+   "num_layers": 1,
+   "shape_parameter_1": 0.19056350303213387
+  },
+  "best_cost": 28.53889513015747,
+  "best_perf": 0.8537314791199233,
+  "mean_perf": 0.8125410666433919
+ },
+ "paramnet/higgs": {
+  "best_config": {
+   "average_units_per_layer_log2": 7.55982676611934,
+   "batch_size_log2": 6.091217166548959,
+   "dropout_0": 0.3482926522666335,
+   "dropout_1": 0.2703961108860617,
+   "final_lr_fraction_log2": -0.0802116054802946,
+   "initial_lr_log10": -3.024840689850871,
+   "num_layers": 4,
+   "shape_parameter_1": 0.8891266958409425
+  },
+  "best_cost": 234.35704545974733,
+  "best_perf": 0.7210655012072452,
+  "mean_perf": 0.634034073541998
+ },
+ "paramnet/letter": {
+  "best_config": {
+   "average_units_per_layer_log2": 7.791312360495005,
+   "batch_size_log2": 4.680480892768424,
+   "dropout_0": 0.0337965493820655,
+   "dropout_1": 0.12245614623104517,
+   "final_lr_fraction_log2": -1.7536001059083945,
+   "initial_lr_log10": -2.5156845632272895,
+   "num_layers": 4,
+   "shape_parameter_1": 0.41651467599507774
+  },
+  "best_cost": 98.27047367095948,
+  "best_perf": 0.9651288998647277,
+  "mean_perf": 0.4401845448784407
+ }
+}
