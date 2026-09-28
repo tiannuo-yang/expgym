@@ -1,0 +1,29 @@
+figure,panel,scenario,regime,series,reported_agents,source_metric,display_value,display_unit,expected_items,expected_units,source,source_group,source_cohort,source_agents,derivation
+audit_scaling_EA_MV,a,evidence_audit,cost_moderate,naive,1,EA_MI,77.6018099547511,percent,13,13,metrics/unified_settings.csv,scaling,new,8,individual-agent mean from naive N8 EA_MI; 13 documents x 8 agents; no singleton re-vote
+audit_scaling_EA_MV,a,evidence_audit,cost_moderate,naive,2,EA_MV,82.579185520362,percent,13,13,metrics/unified_settings.csv,scaling,new,2,published aggregate
+audit_scaling_EA_MV,a,evidence_audit,cost_moderate,naive,4,EA_MV,84.2857142857143,percent,13,13,metrics/unified_settings.csv,scaling,new,4,published aggregate
+audit_scaling_EA_MV,a,evidence_audit,cost_moderate,naive,6,EA_MV,84.453781512605,percent,13,13,metrics/unified_settings.csv,scaling,new,6,published aggregate
+audit_scaling_EA_MV,a,evidence_audit,cost_moderate,naive,8,EA_MV,84.1628959276018,percent,13,13,metrics/unified_settings.csv,scaling,new,8,published aggregate
+audit_scaling_EA_MV,a,evidence_audit,cost_moderate,cached,2,EA_MV,86.8778280542986,percent,13,13,metrics/unified_settings.csv,scaling,new,2,published aggregate
+audit_scaling_EA_MV,a,evidence_audit,cost_moderate,cached,4,EA_MV,90.0452488687783,percent,13,13,metrics/unified_settings.csv,scaling,new,4,published aggregate
+audit_scaling_EA_MV,a,evidence_audit,cost_moderate,cached,6,EA_MV,92.3076923076923,percent,13,13,metrics/unified_settings.csv,scaling,new,6,published aggregate
+audit_scaling_EA_MV,a,evidence_audit,cost_moderate,cached,8,EA_MV,91.8552036199095,percent,13,13,metrics/unified_settings.csv,scaling,new,8,published aggregate
+audit_scaling_EA_MV,a,evidence_audit,cost_moderate,poolact,2,EA_MV,92.7601809954751,percent,13,13,metrics/unified_settings.csv,scaling,new,2,published aggregate
+audit_scaling_EA_MV,a,evidence_audit,cost_moderate,poolact,4,EA_MV,97.737556561086,percent,13,13,metrics/unified_settings.csv,scaling,new,4,published aggregate
+audit_scaling_EA_MV,a,evidence_audit,cost_moderate,poolact,6,EA_MV,100,percent,13,13,metrics/unified_settings.csv,scaling,new,6,published aggregate
+audit_scaling_EA_MV,a,evidence_audit,cost_moderate,poolact,8,EA_MV,100,percent,13,13,metrics/unified_settings.csv,scaling,new,8,published aggregate
+audit_scaling_EA_MV,a,evidence_audit,cost_moderate,single,1,EA,81.7496229260935,percent,13,39,metrics/unified_settings.csv,thinking_same_version,same_version_max,1,separate ExpGym Max reference; 13 documents x 3 orders; not a shared curve anchor
+audit_scaling_EA_MV,b,evidence_audit,cost_tight,naive,1,EA_MI,59.106334841629,percent,13,13,metrics/unified_settings.csv,scaling,new,8,individual-agent mean from naive N8 EA_MI; 13 documents x 8 agents; no singleton re-vote
+audit_scaling_EA_MV,b,evidence_audit,cost_tight,naive,2,EA_MV,63.2029734970911,percent,13,13,metrics/unified_settings.csv,scaling,new,2,published aggregate
+audit_scaling_EA_MV,b,evidence_audit,cost_tight,naive,4,EA_MV,63.1286360698125,percent,13,13,metrics/unified_settings.csv,scaling,new,4,published aggregate
+audit_scaling_EA_MV,b,evidence_audit,cost_tight,naive,6,EA_MV,62.8151260504202,percent,13,13,metrics/unified_settings.csv,scaling,new,6,published aggregate
+audit_scaling_EA_MV,b,evidence_audit,cost_tight,naive,8,EA_MV,63.3484162895928,percent,13,13,metrics/unified_settings.csv,scaling,new,8,published aggregate
+audit_scaling_EA_MV,b,evidence_audit,cost_tight,cached,2,EA_MV,61.9909502262443,percent,13,13,metrics/unified_settings.csv,scaling,new,2,published aggregate
+audit_scaling_EA_MV,b,evidence_audit,cost_tight,cached,4,EA_MV,66.9683257918552,percent,13,13,metrics/unified_settings.csv,scaling,new,4,published aggregate
+audit_scaling_EA_MV,b,evidence_audit,cost_tight,cached,6,EA_MV,66.0633484162896,percent,13,13,metrics/unified_settings.csv,scaling,new,6,published aggregate
+audit_scaling_EA_MV,b,evidence_audit,cost_tight,cached,8,EA_MV,66.0633484162896,percent,13,13,metrics/unified_settings.csv,scaling,new,8,published aggregate
+audit_scaling_EA_MV,b,evidence_audit,cost_tight,poolact,2,EA_MV,64.2533936651584,percent,13,13,metrics/unified_settings.csv,scaling,new,2,published aggregate
+audit_scaling_EA_MV,b,evidence_audit,cost_tight,poolact,4,EA_MV,80.9954751131222,percent,13,13,metrics/unified_settings.csv,scaling,new,4,published aggregate
+audit_scaling_EA_MV,b,evidence_audit,cost_tight,poolact,6,EA_MV,87.3303167420815,percent,13,13,metrics/unified_settings.csv,scaling,new,6,published aggregate
+audit_scaling_EA_MV,b,evidence_audit,cost_tight,poolact,8,EA_MV,92.3076923076923,percent,13,13,metrics/unified_settings.csv,scaling,new,8,published aggregate
+audit_scaling_EA_MV,b,evidence_audit,cost_tight,single,1,EA,57.9185520361991,percent,13,39,metrics/unified_settings.csv,thinking_same_version,same_version_max,1,separate ExpGym Max reference; 13 documents x 3 orders; not a shared curve anchor

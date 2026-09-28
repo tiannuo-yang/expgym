@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f9fafb">
+  <title>ExpGym — When interaction is the bottleneck</title>
+  <meta name="description" content="ExpGym: an evaluation suite for costly feedback. PoolAct: parallel scaling infrastructure and a coordination strategy. Cached feedback, simulated costs, your model.">
+  <meta property="og:title" content="ExpGym — When interaction is the bottleneck">
+  <meta property="og:description" content="An evaluation suite and parallel scaling infrastructure for agents under costly feedback. Skip the feedback wait. Bring your model.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://tiannuo-yang.github.io/expgym/">
+  <link rel="canonical" href="https://tiannuo-yang.github.io/expgym/">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%2316191d'/%3E%3Cpath d='M8 8h16v4H12v3h10v3H12v3h12v4H8z' fill='%23f45b35'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="product.css">
+  <script src="data.js" defer></script>
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+  <header class="header wrap">
+    <a class="brand" href="#" aria-label="ExpGym home"><span class="brand-mark" aria-hidden="true">E</span>ExpGym<span class="brand-divider">/</span><span class="brand-sub">PoolAct</span></a>
+    <nav aria-label="Main navigation"><a href="#findings">Findings</a><a href="#poolact">PoolAct</a><a href="#quickstart" class="nav-start">Quick start</a><a class="nav-code" href="https://github.com/tiannuo-yang/expgym" target="_blank" rel="noopener">GitHub <span aria-hidden="true">↗</span></a></nav>
+  </header>
+  <main id="main">
+    <section class="hero wrap" aria-labelledby="hero-title">
+      <div class="hero-copy">
+        <p class="eyebrow"><span class="tiny-mark" aria-hidden="true">⌁</span> EVALUATION + PARALLEL SCALING</p>
+        <h1 id="hero-title">When <em>interaction</em><br>is the bottleneck.</h1>
+        <dl class="product-definitions"><div><dt>ExpGym</dt><dd>Evaluation suite for costly feedback.</dd></div><div><dt>PoolAct</dt><dd>Parallel scaling infrastructure<br>and coordination strategy.</dd></div></dl>
+        <div class="hero-actions"><a class="button primary" href="#quickstart">Get started <span aria-hidden="true">↓</span></a><a class="button text-button" href="assets/paper.pdf" target="_blank" rel="noopener">Read the paper <span aria-hidden="true">↗</span></a></div>
+        <p class="hero-subtitle">Cached feedback. Simulated costs. Your model.</p>
+      </div>
+      <figure class="hero-figure">
+        <div class="chart-header"><span class="eyebrow">THE FEEDBACK CLIFF</span><span class="chart-unit">Search F1 (%)</span></div>
+        <div id="hero-chart" class="hero-chart"></div>
+        <div class="chart-footer"><label class="select-label" for="model-select">Model<select id="model-select"><option value="5">Gemini 3.8 Flash</option><option value="0">Kimi K3</option><option value="1">GLM-5.3</option><option value="2">Qwen3.8</option><option value="3">DeepSeek V4 Flash</option><option value="4">GPT-5.6-sol</option></select></label><span class="chart-drop" id="hero-drop">−54.3<span>percentage points</span></span></div>
+        <figcaption>Same questions. Less access to evidence. <a class="source" href="assets/sources/main-results.csv" target="_blank" rel="noopener" aria-label="Source: paper Table 1">Table 1 ↗</a></figcaption>
+      </figure>
+    </section>
+    <div class="scope wrap"><span><b>6</b> models studied</span><span><b>3</b> environments</span><span><b>3</b> feedback regimes</span><p><a href="https://github.com/tiannuo-yang/expgym/blob/main/LICENSE" target="_blank" rel="noopener">MIT licensed ↗</a></p></div>
+    <section class="benchmark wrap" aria-labelledby="benchmark-title">
+      <div class="section-intro"><div><p class="eyebrow section-kicker">01 / EVALUATION SUITE</p><h2 id="benchmark-title">Same world.<br>Different access.</h2></div><p>ExpGym holds tasks and tools fixed.<br>Only the feedback budget changes.</p></div>
+      <div class="environments">
+        <article><span class="env-icon" aria-hidden="true">ƒ(x)</span><h3>Tune</h3><p>Test a configuration.</p><div class="env-bottom"><span>9 tuning tasks</span><code>evaluate_config</code></div></article>
+        <article><span class="env-icon path-icon" aria-hidden="true">○—○—○</span><h3>Search</h3><p>Follow the evidence.</p><div class="env-bottom"><span>73 three-hop questions</span><code>search</code></div></article>
+        <article><span class="env-icon" aria-hidden="true">[ ✓ ]</span><h3>Audit</h3><p>Verify the support.</p><div class="env-bottom"><span>13 documents · 17 hypotheses each</span><code>human_feedback</code></div></article>
+      </div>
+      <div class="budget-strip"><span class="budget-label">FEEDBACK ALLOWANCE</span><span><b>∞</b> Free</span><span><b>10×</b> Moderate</span><span class="tight-budget"><b>3×</b> Tight</span><span class="budget-base">the task’s reference cost</span></div>
+      <p class="caption benchmark-caption">Budgets measure simulated cost. All regimes cap interaction at 30 steps. <a class="source" href="assets/paper.pdf#page=3" target="_blank" rel="noopener">Protocol ↗</a></p>
+      <aside class="feedback-callout"><h3>Keep the cost.<br><em>Skip the wait.</em></h3><p>Pre-cached observations and deterministic surrogates return feedback without rerunning expensive experiments or waiting for human review. The agent still pays the simulated cost.</p></aside>
+    </section>
+
+    <section class="findings wrap" id="findings" aria-labelledby="findings-title">
+      <div class="section-intro"><div><p class="eyebrow section-kicker">02 / WHAT CHANGES</p><h2 id="findings-title">Less feedback.<br>Different conclusions.</h2></div><p>Performance is only part of the story.</p></div>
+      <div class="finding-grid">
+        <article class="finding">
+          <span class="finding-number">01</span><h3>Choose for your budget.</h3><p>The Free Feedback winner can be the wrong deployment choice.</p>
+          <div class="regret-viz" role="img" aria-label="ParamNet Adult: GPT-5.6-sol leads with free feedback at 97.94 versus Gemini 3.8 Flash at 96.22. With a tight budget, GPT scores 72.01 and Gemini scores 87.23. Selecting the free-feedback winner incurs 15.22 Gap Score points of regret.">
+            <div class="paired-chart-head"><span>ParamNet · Adult</span><span>Gap Score ↑</span></div>
+            <div class="comparison-group"><div class="comparison-label">FREE FEEDBACK</div><div class="bar-row"><span>GPT-5.6-sol</span><div class="track"><i style="width:97.94%" class="ink-bar"></i></div><b>97.94</b></div><div class="bar-row"><span>Gemini 3.8 Flash</span><div class="track"><i style="width:96.22%" class="orange-bar"></i></div><b>96.22</b></div></div>
+            <div class="comparison-group"><div class="comparison-label">TIGHT BUDGET</div><div class="bar-row"><span>GPT-5.6-sol</span><div class="track"><i style="width:72.01%" class="ink-bar"></i></div><b>72.01</b></div><div class="bar-row"><span>Gemini 3.8 Flash</span><div class="track"><i style="width:87.23%" class="orange-bar"></i></div><b>87.23</b></div></div>
+          </div>
+          <div class="finding-takeaway"><strong>15.22</strong><span>points lost by keeping<br>the Free Feedback winner</span></div>
+          <p class="caption">Task-specific Gap Score; 3 runs per model and regime. <a class="source" href="assets/sources/tuning-task-scores.csv" target="_blank" rel="noopener">Data ↗</a></p>
+        </article>
+        <article class="finding">
+          <span class="finding-number">02</span><h3>Correct isn’t complete.</h3><p>Labels stay accurate while their supporting evidence falls apart.</p>
+          <div class="evidence-viz" id="evidence-chart"></div>
+          <div class="finding-takeaway"><strong>50.2<span>%</span></strong><span>omit required evidence<br>under Tight Budget</span></div>
+          <p class="caption">Hypotheses requiring evidence; 6 models, 13 documents, 3 orderings. <a class="source" href="assets/sources/evidence-audit.csv" target="_blank" rel="noopener">Table 4 ↗</a></p>
+        </article>
+      </div>
+    </section>
+
+    <section class="poolact" id="poolact" aria-labelledby="poolact-title">
+      <div class="wrap">
+        <div class="section-intro pool-intro"><div><p class="eyebrow section-kicker">03 / PARALLEL SCALING</p><h2 id="poolact-title">Scale what agents learn.<br><em>Together.</em></h2></div><p>PoolAct coordinates parallel agents<br>through shared feedback and exploration.</p></div>
+        <div class="pool-grid">
+          <div class="pool-method">
+            <div class="coordination-diagram" role="img" aria-label="Four agents share a cache of completed observations and an exploration graph of results, paths and pending requests. Each reads this state, chooses an action and registers the request under a decision lock. Tools execute in parallel.">
+              <div class="agent-row"><span>A<sub>1</sub></span><span>A<sub>2</sub></span><span>A<sub>3</sub></span><span>A<sub>4</sub></span></div>
+              <div class="diagram-wires" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+              <div class="shared-state"><span class="eyebrow">SHARED STATE</span><strong>What we know.<br>What we’re exploring.</strong><div><span>Observation cache</span><span>Exploration graph</span></div></div>
+              <div class="decision-flow"><span>Read</span><span aria-hidden="true">→</span><span>Choose</span><span aria-hidden="true">→</span><span>Register</span></div>
+              <p class="diagram-note">Decisions take turns. Tools run in parallel.</p>
+            </div>
+            <div class="pool-result"><span class="eyebrow">4 AGENTS · MATCHED PER-AGENT BUDGET</span><div><span>68.8</span><span class="result-arrow" aria-hidden="true">→</span><strong>93.7<span>%</span></strong></div><p>Qwen3.8 · exact evidence accuracy<br>Independent → PoolAct · Moderate Budget</p></div>
+          </div>
+          <figure class="scaling-figure">
+            <div class="scaling-top"><div><h3>Coordination keeps scaling.</h3><p>GLM-5.3 · evidence audit</p></div><div class="segmented" role="group" aria-label="Feedback budget"><button type="button" data-regime="tight" aria-pressed="true">Tight</button><button type="button" data-regime="moderate" aria-pressed="false">Moderate</button></div></div>
+            <p class="scaling-unit">Exact evidence-set accuracy (%)</p>
+            <div id="scaling-chart"></div>
+            <div class="legend"><span><i class="legend-pool"></i>PoolAct</span><span><i class="legend-cached"></i>Cached</span><span><i class="legend-naive"></i>Independent</span></div>
+            <div class="scaling-conclusion" id="scaling-conclusion"><strong>92.3%</strong><span>with PoolAct at 8 agents<br>vs. 63.3% independent</span></div>
+            <figcaption>13 documents. Fixed per-agent budget; total budget grows with pool size. Independent results use subsets of stored 8-agent pools. <a class="source" href="assets/scaling.csv" download>Figure data ↓</a></figcaption>
+          </figure>
+        </div>
+        <div class="pool-bottom"><p><b>12 / 12</b> evidence-audit comparisons favor PoolAct over both baselines.</p><span>6 models × 2 budgets · 4 agents</span><a class="source" href="assets/sources/poolact-results.csv" target="_blank" rel="noopener">Table 5 ↗</a></div>
+      </div>
+    </section>
+
+    <section class="start wrap" id="quickstart" aria-labelledby="start-title">
+      <div class="start-copy"><p class="eyebrow section-kicker">04 / QUICK START</p><h2 id="start-title">Clone. Install.<br><em>Evaluate.</em></h2><p class="start-lead">Your first offline run in seconds.<br>No API key. No benchmark data to download.</p><div class="model-compatibility"><h3>Your model. Your endpoint.</h3><p>Any OpenAI-compatible tool-calling API.<br>Hosted or local. <a class="inline-link" href="https://github.com/tiannuo-yang/expgym/blob/main/docs/extending.md#python-api" target="_blank" rel="noopener">Other APIs via a custom backend.</a></p><div class="provider-list" aria-label="Supported endpoint examples"><span>OpenAI</span><span>OpenRouter</span><span>vLLM</span><span>SGLang</span></div></div><a class="button text-button" href="https://github.com/tiannuo-yang/expgym/blob/main/docs/installation.md" target="_blank" rel="noopener">Read the docs <span aria-hidden="true">↗</span></a></div>
+      <div class="quickstart-terminal">
+        <div class="terminal-heading"><span class="terminal-label"><span aria-hidden="true">&gt;_</span> expgym</span><span>Python ≥ 3.7 · NumPy</span></div>
+        <div class="quick-tabs" role="tablist" aria-label="Quick start instructions"><button id="tab-install" role="tab" type="button" aria-selected="true" aria-controls="panel-install" tabindex="0">01 Install</button><button id="tab-offline" role="tab" type="button" aria-selected="false" aria-controls="panel-offline" tabindex="-1">02 Try offline</button><button id="tab-model" role="tab" type="button" aria-selected="false" aria-controls="panel-model" tabindex="-1">03 Your model</button></div>
+        <div class="quick-panel" id="panel-install" role="tabpanel" aria-labelledby="tab-install" tabindex="0"><div class="code-toolbar"><span>Clone the repo. Install the core.</span><button class="copy-code" type="button" data-copy="code-install" aria-label="Copy installation commands">Copy</button></div><pre><code id="code-install"><span class="code-comment"># 1. Clone</span>
+git clone https://github.com/tiannuo-yang/expgym.git
+cd expgym
+
+<span class="code-comment"># 2. Install</span>
+python -m pip install -e .</code></pre><p class="terminal-note">Core dependency: NumPy. Python 3.7+ and Git required.</p><button class="next-step" type="button" data-next="offline">Next: run the offline demo <span aria-hidden="true">→</span></button></div>
+        <div class="quick-panel" id="panel-offline" role="tabpanel" aria-labelledby="tab-offline" tabindex="0" hidden><div class="code-toolbar"><span>Three budgets. One command.</span><button class="copy-code" type="button" data-copy="code-offline" aria-label="Copy offline evaluation commands">Copy</button></div><pre><code id="code-offline"><span class="code-comment"># 3. Evaluate with a scripted agent</span>
+python -m expgym run --task toy \
+  --backend scripted --output runs/smoke
+
+<span class="code-comment"># Inspect scores</span>
+python -m expgym summarize runs/smoke</code></pre><div class="terminal-result"><span aria-hidden="true">✓</span><span>3 regimes · JSON traces + scores</span><span class="runtime-badge">&lt;1s*</span></div><p class="terminal-note">*Local scripted smoke run; excludes installation. Real-model evaluations take longer.</p><button class="next-step" type="button" data-next="model">Next: bring your own model <span aria-hidden="true">→</span></button></div>
+        <div class="quick-panel" id="panel-model" role="tabpanel" aria-labelledby="tab-model" tabindex="0" hidden><div class="code-toolbar"><span>After installation · run from the repo</span><button class="copy-code" type="button" data-copy="code-model" aria-label="Copy model evaluation commands">Copy</button></div><pre><code id="code-model"><span class="code-comment"># Download audit data once</span>
+python scripts/download_data.py --only audit
+
+export EXPGYM_API_KEY="your-api-key"
+python -m expgym run --task audit \
+  --items 0 --repeats 1 --regimes tight \
+  --model your-model \
+  --base-url https://your-endpoint/v1 \
+  --output runs/demo</code></pre><p class="terminal-note">Use your model ID, endpoint and key. Feedback is simulated; model API time and usage still apply.</p><details class="pool-command"><summary>Run 4 agents with PoolAct</summary><div class="code-toolbar"><span>Same data, model and API key</span><button class="copy-code" type="button" data-copy="code-pool" aria-label="Copy PoolAct evaluation command">Copy</button></div><pre><code id="code-pool">python -m expgym pool --task audit \
+  --items 0 --regimes tight --agents 4 \
+  --strategies poolact --model your-model \
+  --base-url https://your-endpoint/v1 \
+  --output runs/pool</code></pre></details></div>
+        <span id="copy-status" class="sr-only" role="status"></span>
+      </div>
+    </section>
+    <footer class="wrap footer"><a class="brand" href="#"><span class="brand-mark" aria-hidden="true">E</span>ExpGym</a><p>When Interaction Is the Bottleneck</p><div><a href="assets/paper.pdf" target="_blank" rel="noopener">Paper ↗</a><a href="https://github.com/tiannuo-yang/expgym" target="_blank" rel="noopener">Code ↗</a><a href="assets/provenance.json" target="_blank" rel="noopener">Sources ↗</a></div></footer>
+  </main>
+</body>
+</html>

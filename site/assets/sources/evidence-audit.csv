@@ -1,0 +1,4 @@
+population,metric,free_feedback,moderate_budget,tight_budget
+nonempty_reference_evidence,label_accuracy,85.9,86.0,83.4
+nonempty_reference_evidence,exact_evidence_set_accuracy,81.6,64.0,45.1
+nonempty_reference_evidence,missing_evidence,17.3,33.0,50.2

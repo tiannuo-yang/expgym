@@ -6,7 +6,7 @@
 [![Python](https://img.shields.io/badge/python-3.7%2B-blue)](pyproject.toml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 
-[Quick start](#quick-start) · [Benchmarks](#benchmarks) · [PoolAct](#poolact) · [Use your model](#use-your-model) · [Documentation](#documentation)
+[Project homepage](https://tiannuo-yang.github.io/expgym/) · [Quick start](#quick-start) · [Benchmarks](#benchmarks) · [PoolAct](#poolact) · [Use your model](#use-your-model) · [Documentation](#documentation)
 
 An agent can reason for another turn, but can it afford another experiment, document retrieval, or human review? **ExpGym** evaluates tool-using agents when each observation consumes a feedback budget. **PoolAct** lets multiple agents coordinate their exploration through shared observations, an exploration graph, and a decision lock.
 
@@ -148,6 +148,7 @@ It runs offline by default. The [extension guide](docs/extending.md) covers regi
 | [Experiments and reproduction](docs/experiments.md) | CLI flags, item selection, repeat counts, paper settings, and ablations |
 | [Custom environments and API](docs/extending.md) | Task registration, backends, and Python examples |
 | [Outputs and source map](docs/reference.md) | JSON fields, aggregation outputs, and repository layout |
+| [Project homepage](docs/website.md) | Website source, local preview, and GitHub Pages deployment |
 | [Third-party notices](THIRD_PARTY_NOTICES.md) | Dataset sources, pinned revisions, and licenses |
 
 ## Development

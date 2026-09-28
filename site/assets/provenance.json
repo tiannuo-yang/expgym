@@ -1,0 +1,97 @@
+{
+  "paper": {
+    "repository": "https://github.com/tiannuo-yang/expgym-paper",
+    "commit": "93c86e2700813c0b95aa27a17ad774529c5d96e6",
+    "manuscript": "iclr2026/main.tex",
+    "pdf": "Locally compiled main.pdf matching current manuscript; anonymous review version.",
+    "source_access": "Original manuscript repository is private; the PDF and CSV snapshots used on this site are included locally."
+  },
+  "code": {
+    "repository": "https://github.com/tiannuo-yang/expgym",
+    "branch": "main",
+    "commit": "ede9b54b1233bc94aaad78c4414fdec5bcb6befd",
+    "initial_release_commit": "618c661c5b95045fc408407072754c40540f275b"
+  },
+  "charts": {
+    "feedback_cliff": {
+      "source": "iclr2026/tables/table1_20260916.tex",
+      "metric": "Search AVG: equal-weight mean of whois and whatis set F1, percent",
+      "sample": "73 questions, 6 models, 3 regimes",
+      "note": "Display values use the one-decimal values reported in Table 1.",
+      "public_snapshot": "sources/main-results.csv"
+    },
+    "deployment_regret": {
+      "source": "iclr2026/data/hpo_task_scores_20260917.csv",
+      "metric": "Gap Score on ParamNet Adult",
+      "sample": "3 repeats per model and regime",
+      "note": "Regret uses unrounded values: 87.23184273904896 - 72.01344351468897 = 15.218399224359985.",
+      "public_snapshot": "sources/tuning-task-scores.csv"
+    },
+    "evidence_gap": {
+      "source": "iclr2026/tables/audit_outcomes_20260917.tex",
+      "metric": "Label accuracy and exact evidence-set accuracy, percent",
+      "sample": "Only hypotheses with nonempty reference evidence; 6 models, 13 documents, 3 hypothesis orderings",
+      "values": {
+        "label": [
+          85.9,
+          86.0,
+          83.4
+        ],
+        "evidence": [
+          81.6,
+          64.0,
+          45.1
+        ],
+        "missing_evidence_tight": 50.2
+      },
+      "public_snapshot": "sources/evidence-audit.csv"
+    },
+    "poolact_scaling": {
+      "source": "iclr2026/data/glm_followups_4250444/audit_scaling_EA_MV.csv",
+      "metric": "GLM-5.3 majority-vote exact evidence-set accuracy, percent",
+      "sample": "13 documents, pool sizes 2,4,6,8",
+      "note": "Fixed per-agent budgets. Total budget increases with pool size. Naive uses majority-vote subsets of stored N=8 pools. Cached and PoolAct measured directly. N=1 and separate single-agent references omitted.",
+      "public_snapshot": "scaling.csv"
+    },
+    "four_agent_highlight": {
+      "source": "iclr2026/tables/poolact_results_20260916.tex",
+      "model": "Qwen3.8",
+      "regime": "Moderate Budget",
+      "metric": "Majority-vote exact evidence-set accuracy, percent",
+      "agents": 4,
+      "naive": 68.8,
+      "poolact": 93.7,
+      "public_snapshot": "sources/poolact-results.csv"
+    }
+  },
+  "quickstart": {
+    "source": "https://github.com/tiannuo-yang/expgym",
+    "commit": "618c661c5b95045fc408407072754c40540f275b",
+    "validation_scope": "Static/fake validation",
+    "install": "Verified in an isolated Python 3.12 environment, including editable installation. Core dependency: NumPy.",
+    "offline_toy": {
+      "regimes": [
+        "free",
+        "moderate",
+        "tight"
+      ],
+      "wall_seconds": 0.129,
+      "excludes": "Installation and dataset downloads",
+      "backend": "scripted",
+      "artifacts": "3 valid JSON traces and CLI summary",
+      "platform": "macOS ARM64"
+    },
+    "audit_setup": "Verified release downloader --only audit.",
+    "audit_validation": {
+      "item": "0",
+      "regime": "tight",
+      "single_agents": 1,
+      "poolact_agents": 4,
+      "backend": "scripted",
+      "result": "Successful single and pool runs; finite scores and all four pool agent records."
+    },
+    "api_validation": "OpenAI-compatible tool-calling interface inspected in release CLI and backend. No real provider API calls performed.",
+    "repository_access": "Public repository: tiannuo-yang/expgym. Initial smoke timing used the unchanged runtime from release commit 618c661.",
+    "public_release_commit": "ede9b54b1233bc94aaad78c4414fdec5bcb6befd"
+  }
+}

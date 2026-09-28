@@ -1,0 +1,13 @@
+model,regime,tuning_gap_naive,tuning_gap_cached,tuning_gap_poolact,search_f1_naive,search_f1_cached,search_f1_poolact,audit_evidence_accuracy_naive,audit_evidence_accuracy_cached,audit_evidence_accuracy_poolact,overall_avg_naive,overall_avg_cached,overall_avg_poolact
+Kimi K3,Moderate Budget,98.0,98.0,98.6,64.6,64.2,66.7,71.9,77.4,95.5,78.2,79.8,86.9
+GLM-5.3,Moderate Budget,97.9,98.1,99.0,62.0,65.7,65.7,81.4,83.3,98.2,80.4,82.3,87.6
+Qwen3.8,Moderate Budget,96.9,97.7,98.9,61.2,61.2,63.5,68.8,74.7,93.7,75.6,77.9,85.3
+DeepSeek V4 Flash,Moderate Budget,96.7,96.3,98.7,60.3,61.8,61.3,69.7,72.4,94.6,75.6,76.8,84.9
+GPT-5.6-sol,Moderate Budget,98.1,98.2,98.0,62.3,63.8,60.6,64.7,65.2,67.4,75.0,75.7,75.3
+Gemini 3.8 Flash,Moderate Budget,98.8,98.8,98.8,65.2,68.1,68.0,81.0,88.7,97.7,81.7,85.2,88.2
+Kimi K3,Tight Budget,93.6,93.0,95.5,21.3,18.7,30.4,54.8,54.8,62.9,56.6,55.5,63.0
+GLM-5.3,Tight Budget,84.8,85.3,96.0,19.6,18.8,31.2,63.1,67.0,81.0,55.8,57.0,69.4
+Qwen3.8,Tight Budget,90.6,90.8,96.3,18.3,23.3,21.7,55.7,60.2,64.3,54.9,58.1,60.7
+DeepSeek V4 Flash,Tight Budget,83.2,83.0,95.3,2.6,4.3,7.4,62.0,62.4,71.5,49.3,49.9,58.1
+GPT-5.6-sol,Tight Budget,96.6,96.0,97.3,19.2,20.3,21.9,51.6,58.8,62.4,55.8,58.4,60.5
+Gemini 3.8 Flash,Tight Budget,95.9,96.0,97.6,20.4,20.9,33.4,68.8,71.5,73.8,61.7,62.8,68.2
