@@ -166,7 +166,7 @@ Bug reports and contributions are welcome through [issues](https://github.com/ti
 
 If you use ExpGym or PoolAct in your research, please cite [this repository](https://github.com/tiannuo-yang/expgym).
 
-[Tiannuo Yang](https://openreview.net/profile?id=~Tiannuo_Yang1)<sup>1</sup> · [Chufan Shi](https://openreview.net/profile?id=~Chufan_Shi1)<sup>1</sup> · [Xuezhe Ma](https://openreview.net/profile?id=~Xuezhe_Ma1)<sup>1</sup> · [Willie Neiswanger](https://openreview.net/profile?id=~Willie_Neiswanger2)<sup>1</sup>
+[Tiannuo Yang](https://tiannuo-yang.github.io/)<sup>1</sup> · [Chufan Shi](https://chufanshi.notion.site/aboutme)<sup>1</sup> · [Xuezhe Ma](https://xuezhemax.github.io/)<sup>1</sup> · [Willie Neiswanger](https://willieneis.github.io/)<sup>1</sup>
 
 <sup>1</sup> University of Southern California (USC)
 
