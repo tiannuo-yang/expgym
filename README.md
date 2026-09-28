@@ -164,13 +164,18 @@ Bug reports and contributions are welcome through [issues](https://github.com/ti
 
 ## Citation
 
-If you use ExpGym or PoolAct in your research, please cite *When Interaction Is the Bottleneck: Evaluating and Scaling Agents Under Costly Feedback*. The source release currently provides anonymous author metadata; the entry below preserves it pending a public bibliographic record.
+If you use ExpGym or PoolAct in your research, please cite [this repository](https://github.com/tiannuo-yang/expgym).
+
+[Tiannuo Yang](https://openreview.net/profile?id=~Tiannuo_Yang1)<sup>1</sup> · [Chufan Shi](https://openreview.net/profile?id=~Chufan_Shi1)<sup>1</sup> · [Xuezhe Ma](https://openreview.net/profile?id=~Xuezhe_Ma1)<sup>1</sup> · [Willie Neiswanger](https://openreview.net/profile?id=~Willie_Neiswanger2)<sup>1</sup>
+
+<sup>1</sup> University of Southern California (USC)
 
 ```bibtex
-@inproceedings{expgym2026,
+@misc{yang2026expgym,
   title  = {When Interaction Is the Bottleneck: Evaluating and Scaling Agents Under Costly Feedback},
-  author = {Anonymous Authors},
-  year   = {2026}
+  author = {Yang, Tiannuo and Shi, Chufan and Ma, Xuezhe and Neiswanger, Willie},
+  year   = {2026},
+  url    = {https://github.com/tiannuo-yang/expgym}
 }
 ```
 
