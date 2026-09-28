@@ -1,298 +1,169 @@
-# ExpGym and PoolAct
+# ExpGym
 
-Code for **"When Interaction Is the Bottleneck: Evaluating and Scaling Agents Under Costly Feedback"**.
+**Evaluate how agents spend scarce feedback. Scale their exploration with PoolAct.**
 
-LLM agents gather evidence by acting: they run experiments, retrieve documents and ask for verification. When that feedback is expensive, what an agent chooses to *ask* matters as much as how it reasons.
+[![Tests](https://github.com/tiannuo-yang/expgym/actions/workflows/tests.yml/badge.svg)](https://github.com/tiannuo-yang/expgym/actions/workflows/tests.yml)
+[![Python](https://img.shields.io/badge/python-3.7%2B-blue)](pyproject.toml)
+[![License: MIT](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 
-- **ExpGym** evaluates tool-using agents under explicit feedback budgets. Tool results come from pre-cached observations and deterministic surrogates, so you can re-run evaluations cheaply. Each request is still charged its simulated cost.
-- **PoolAct** runs several agents on one task. They share completed observations and a live exploration graph, and a lock serializes action selection so agents avoid duplicating each other's requests.
+[Quick start](#quick-start) · [Benchmarks](#benchmarks) · [PoolAct](#poolact) · [Use your model](#use-your-model) · [Documentation](#documentation)
 
-The core package needs only NumPy (plus pyarrow for the search task). It works with any OpenAI-compatible chat endpoint (OpenAI, OpenRouter, vLLM, SGLang, ...), and you can add your own environments with a few dozen lines of code.
+An agent can reason for another turn, but can it afford another experiment, document retrieval, or human review? **ExpGym** evaluates tool-using agents when each observation consumes a feedback budget. **PoolAct** lets multiple agents coordinate their exploration through shared observations, an exploration graph, and a decision lock.
 
-## Contents
+Research code for *When Interaction Is the Bottleneck: Evaluating and Scaling Agents Under Costly Feedback*.
 
-- [Installation](#installation)
-- [Quick start](#quick-start)
-- [How the benchmark works](#how-the-benchmark-works)
-- [Running experiments](#running-experiments)
-- [Reproducing the paper's settings](#reproducing-the-papers-settings)
-- [Adding your own environment](#adding-your-own-environment)
-- [Python API](#python-api)
-- [Output format](#output-format)
-- [Repository layout](#repository-layout)
+![ExpGym workflow: agents choose tools, environments return observations charged against a feedback budget, and traces record quality and cost. PoolAct adds shared observations, an exploration graph, and a decision lock.](docs/assets/overview.svg)
 
-## Installation
+## Why ExpGym?
 
-```bash
-git clone <this repository> expgym && cd expgym
-pip install -e ".[data,dev]"          # Python >= 3.7
-```
+- **Make feedback cost part of the task.** Compare the same agent under free, moderate, and tight budgets, or set your own budget multiplier.
+- **Run repeatable environments.** Pre-cached observations, tabular benchmarks, and deterministic surrogates make costly interactions practical to evaluate locally.
+- **Compare ways to scale agents.** Run independent agents, agents sharing a cache, and PoolAct with the same task interface and per-agent budget.
+- **Inspect the full trajectory.** Save tool arguments, visible and withheld observations, feedback cost, model usage, final answers, and scores as JSON.
+- **Bring your own model or task.** Use an OpenAI-compatible chat endpoint with native tool calling, or register a custom environment in Python.
 
-Download the benchmark data. Everything goes under `data/` in the repository, or under `$EXPGYM_DATA_ROOT` if it is set.
-
-```bash
-python scripts/download_data.py --only search,audit      # ~70 MB download, ~5 MB kept
-python scripts/download_data.py --only nasbench101,nasbench201
-python scripts/download_data.py --only paramnet          # ~200 MB, needs git
-python scripts/download_data.py --check                  # show what is present
-```
-
-The NAS-Bench downloads are large (2 GB and 1.1 GB). They are verified against pinned checksums, converted into small lookup tables (~25 MB and 1.4 MB), and then deleted. If you already have `nasbench_full.tfrecord`, `NATS-tss-v1_0-3ffb9-simple.tar` or the six ParamNet surrogate `.pkl` files on disk, point `NASBENCH101_TFRECORD`, `NATS_TSS_ARCHIVE` or `PARAMNET_SURROGATES_DIR` at them to skip the download.
-
-**ParamNet needs Python 3.7.** The three ParamNet tuning tasks use HPOBench surrogate models that were pickled with scikit-learn 0.23. Run those tasks in the provided environment:
-
-```bash
-conda env create -f environment-paramnet.yml && conda activate expgym-paramnet
-```
-
-The other tasks run on any Python ≥ 3.7.
+The core package depends only on NumPy. Search data loading additionally uses PyArrow. Feedback costs are **simulated time**, separate from wall-clock latency and provider charges.
 
 ## Quick start
 
-Check the pipeline offline with the scripted stand-in model. It needs no API key and no data:
+Clone and install from source. The core supports Python 3.7+; the legacy ParamNet tasks require a [separate Python 3.7 environment](docs/installation.md#paramnet-environment).
 
 ```bash
-python -m expgym run --task toy --backend scripted --output runs/smoke
-python -m expgym summarize runs/smoke
+git clone https://github.com/tiannuo-yang/expgym.git
+cd expgym
+python3 -m venv .venv
+source .venv/bin/activate
+python -m pip install --upgrade pip
+python -m pip install -e .
 ```
 
-Then run a real model. `--base-url` accepts any OpenAI-compatible endpoint, and the API key is read from `$EXPGYM_API_KEY` (use `--api-key-env` to read a different variable):
+Run a complete single-agent evaluation with a scripted model. **No API key or benchmark downloads required.**
 
 ```bash
-export EXPGYM_API_KEY=...
-python -m expgym run --task search --items 0:5 --regimes tight \
-    --model your-model --base-url https://your-endpoint/v1 --output runs/demo
-
-python -m expgym pool --task audit --items 0 --regimes tight --agents 4 \
-    --model your-model --base-url https://your-endpoint/v1 --output runs/demo
-
-python -m expgym summarize runs/demo
+python -m expgym run --task toy --backend scripted --output runs/quickstart
+python -m expgym summarize runs/quickstart
 ```
 
-After `pip install -e .`, the `expgym` command is equivalent to `python -m expgym`.
+This runs the toy tuning task under all three feedback regimes and writes one JSON trajectory per regime. The summary reports a Gap Score for each budget. Now compare all three multi-agent strategies:
 
-## How the benchmark works
-
-### Environments
-
-| Task (`--task`) | Items | Tool | Feedback cost | Metric |
-|---|---|---|---|---|
-| `tuning` | 9 HPOBench tasks: `paramnet/{adult,higgs,letter}`, `nasbench101/{A,B,C}`, `nasbench201/{cifar10-valid,cifar100,imagenet16-120}` | `evaluate_config` returns validation performance | the configuration's simulated training time | Gap Score |
-| `search` | 73 three-hop PhantomWiki questions (39 *whois*, 34 *whatis*), IDs `seed2/0` … `seed3/36` | `search` returns one full article (exact title match, else keyword match) | 280–320 s for each *new* article; repeat retrievals are free | set F1 over names |
-| `audit` | 13 ContractNLI documents × 17 hypotheses | `human_feedback` checks a proposed evidence set for one hypothesis | 280–320 s for every call | label accuracy, exact evidence-set accuracy |
-| `toy` | a synthetic tuning problem (no data needed) | `evaluate_config` | synthetic | Gap Score |
-
-The **Gap Score** normalizes tuning performance against a 100,000-sample random search of the same space. The statistics are shipped in `expgym/resources/hpo_reference.json`:
-
-```
-gap = max(0, (perf − mean_perf) / (best_perf − mean_perf) × 100)
+```bash
+python -m expgym pool --task toy --backend scripted \
+    --regimes tight --strategies naive,cached,poolact \
+    --agents 4 --output runs/quickstart
+python -m expgym summarize runs/quickstart
 ```
 
-- 0 means no better than the average random configuration, and 100 matches the best of 100K random samples. Scores above 100 are possible.
-- The submitted configuration is scored from the matching evaluation the agent saw. If there is no match, the best evaluation the agent saw is used instead.
-- If the agent saw no evaluation, the submitted configuration is evaluated offline.
-- A run with no final answer, or with no scoreable configuration, gets 0.
+The report now includes single-agent and pool results. These scripted runs verify the execution path; use a real model to evaluate agent quality. After installation, `expgym` is also available as a command.
 
-### Feedback regimes
+## Benchmarks
 
-Every tool call is charged a simulated cost (seconds of simulated time, not wall-clock time or API cost). A regime caps the cumulative cost at `B = β · c_base`, where `c_base` is a task-specific reference cost:
-
-- **tuning:** the cost of the best configuration in the reference search.
-- **search and audit:** 300 s.
-
-| `--regimes` | β | Cost shown to the agent |
-|---|---|---|
-| `free` | ∞ | no |
-| `moderate` | 10 | yes: `Observation: … \| cost=293s [time_left=2415s]` |
-| `tight` | 3 | yes |
-| `beta=<x>` | x | yes (used for budget sweeps) |
-
-The agent is a ReAct loop with native function calling. Each turn may call one tool or give a final answer. Budget and step limits work as follows:
-
-- **Budget boundary:** the call that brings the spent cost to `B` or beyond is charged, but its result is withheld.
-- **Step limit:** every run has a limit of 30 steps, and zero-cost calls count toward it.
-- **Forced answer:** if either limit is hit, the agent is asked to answer immediately from what it has already seen, with tools disabled.
-
-### PoolAct and the baselines
-
-`expgym pool` runs `N` agents (default 4) on the same item. Every agent has the full per-agent budget and step limit. The strategies differ only in what the agents share:
-
-| `--strategies` | Shared completed results | Shared exploration graph | Decision lock |
+| Task | What the agent does | Evaluation set | Metrics |
 |---|---|---|---|
-| `naive` | – | – | – |
-| `cached` | ✓ | – | – |
+| **Tuning** | Choose a configuration, then request its validation performance | 9 tasks across ParamNet, NAS-Bench-101, and NAS-Bench-201 | Gap Score against a 100K-sample random-search reference |
+| **Search** | Retrieve articles to answer a three-hop question | 73 PhantomWiki questions: 39 *whois*, 34 *whatis* | Set F1 over answer names |
+| **Audit** | Request feedback on evidence for a contract hypothesis | 13 ContractNLI documents × 17 hypotheses | Label accuracy and exact evidence-set accuracy |
+| **Toy** | Explore a synthetic tuning problem | One built-in task; no external data | Gap Score |
+
+Tuning charges the configuration's simulated training time. Search charges 280–320 simulated seconds for each new article; retrieving an already seen article is free. Audit charges 280–320 simulated seconds for every feedback request.
+
+### One task, different feedback budgets
+
+Each agent receives a budget **B = β × c_base**, where `c_base` is the task's reference feedback cost.
+
+| Regime | β | What the agent sees |
+|---|---:|---|
+| `free` | ∞ | Observations without cost information |
+| `moderate` | 10 | Observations, their costs, and remaining time |
+| `tight` | 3 | Observations, their costs, and remaining time |
+| `beta=<x>` | Custom | The same cost-aware interface with your chosen budget |
+
+The call that reaches or exceeds the budget is charged, but its result is withheld. At the budget boundary or the step limit (30 by default), the agent must answer from the evidence it has already seen. See the [benchmark protocol](docs/benchmark.md) for scoring and budget details.
+
+## PoolAct
+
+PoolAct coordinates several agents working on the same item. Each agent keeps its own simulated clock, full feedback budget, and step limit.
+
+| Strategy | Shared completed observations | Shared exploration graph | Decision lock |
+|---|:---:|:---:|:---:|
+| `naive` | — | — | — |
+| `cached` | ✓ | — | — |
 | `poolact` | ✓ | ✓ | ✓ |
-| `poolact --no-lock` (ablation) | ✓ | ✓ | – |
+| `poolact --no-lock` | ✓ | ✓ | — |
 
-Agents run on simulated clocks: an agent's clock equals its own spent cost. How agents see each other's work:
+**Share evidence.** A completed observation can be reused at zero feedback cost once it is visible at the requesting agent's simulated time. In-flight requests are not cache hits.
 
-- **Cached results:** a request matches a completed one when the tool name and the arguments (as JSON with sorted keys) are equal. Another agent's result becomes visible, and free to reuse, only once the requesting agent's clock has passed that result's completion time.
-- **The exploration graph:** appended to the newest observation before every PoolAct decision. It lists requests in progress, results already explored, per-agent exploration paths and a coverage summary.
-- **The decision lock:** covers reading the graph, the model call and registering the chosen request. It is released before the tool runs.
-- **Withheld results:** results withheld at a budget boundary are never shared, and the request is no longer shown as in progress.
+**Coordinate the next action.** Before deciding, each PoolAct agent sees the exploration graph, including completed and pending requests. The lock covers reading the graph, the model call, and registering the chosen request; tools execute after the lock is released.
 
-How pool results are scored:
+Tuning pools report the mean agent Gap Score and best-of-N. Search pools vote over normalized answer sets. Audit pools vote per hypothesis on labels and evidence sets. See [PoolAct semantics](docs/benchmark.md#poolact-and-the-baselines) and [experiment settings](docs/experiments.md).
 
-- **Tuning:** the mean Gap Score of the agents (the best-of-N score is reported too).
-- **Search:** majority vote over normalized answer sets.
-- **Audit:** a per-hypothesis vote, first on the label and then on the evidence set among agents that chose the winning label. The pool is scored by exact evidence-set accuracy; label accuracy is also saved in each result file.
+## Use your model
 
-## Running experiments
+Install the data tools and download the search and audit datasets:
 
 ```bash
-python -m expgym run  --task TASK [--regimes free,moderate,tight] [--items ...] [--repeats R] --model M --output DIR
-python -m expgym pool --task TASK [--strategies naive,cached,poolact] [--agents 4] ... --output DIR
-python -m expgym summarize DIR [--format json]
+python -m pip install -e ".[data]"
+python scripts/download_data.py --only search,audit
+python scripts/download_data.py --only search,audit --check
 ```
 
-- `--items` accepts `all` (default), a group (`whois`, `whatis`, `paramnet`, `nasbench101`, `nasbench201`), a slice such as `0:10`, or a comma-separated list of item IDs.
-- `--items` also accepts several groups at once, e.g. `nasbench101,nasbench201`.
-- `--repeats` defaults to 3 for `tuning` and `audit` and to 1 otherwise. Audit repeats use three fixed hypothesis orderings. For `pool`, tuning uses 3 repeats and the other tasks use 1.
-- `--workers` controls how many jobs run concurrently (4 for `run`, 1 for `pool`, whose agents already run in parallel).
-- Every job writes one JSON file under `DIR/<model>/...`, and re-running the same command skips finished jobs. If a job fails (for example because of an API error), the others continue, and the next invocation retries it. Use a new output directory when you change settings other than the model.
-- `--import MODULE_OR_FILE.py` imports a module first, e.g. one that registers a custom task (see below).
+Configure a chat endpoint that supports native function calling. The backend reads the model, base URL, and API key from these variables:
 
-Model options:
+```bash
+export EXPGYM_MODEL="your-model"
+export EXPGYM_BASE_URL="https://your-endpoint/v1"
+export EXPGYM_API_KEY="your-api-key"
 
-| Flag | Meaning |
+# Single agent: five questions under the tight budget.
+python -m expgym run --task search --items 0:5 --regimes tight \
+    --output runs/search-demo
+
+# PoolAct: four agents on one document, with one hypothesis ordering.
+python -m expgym pool --task audit --items 0 --regimes tight \
+    --strategies poolact --agents 4 --repeats 1 --output runs/audit-demo
+
+python -m expgym summarize runs/search-demo
+python -m expgym summarize runs/audit-demo
+```
+
+You can also pass `--model`, `--base-url`, and `--api-key-env` explicitly. Model sampling and reasoning options go through `--temperature`, `--top-p`, `--max-tokens`, and `--extra-body`. See [CLI options](docs/experiments.md#running-experiments).
+
+Existing result files are skipped when a command is rerun. **Use a new output directory when changing settings for the same model**: the runner does not validate saved results against the new configuration.
+
+## Add your own environment
+
+Define the task prompt, tool schemas, per-call cost, and final-answer scorer; register the task to use it with both runners. The [compound-screening example](examples/custom_environment.py) includes a complete environment plus single-agent and PoolAct runs:
+
+```bash
+python examples/custom_environment.py
+```
+
+It runs offline by default. The [extension guide](docs/extending.md) covers registration, the Python API, custom model backends, and PoolAct graph hooks.
+
+## Documentation
+
+| Guide | What you will find |
 |---|---|
-| `--model`, `--base-url`, `--api-key-env` | OpenAI-compatible endpoint (`$EXPGYM_MODEL` and `$EXPGYM_BASE_URL` are used as defaults) |
-| `--temperature`, `--top-p`, `--max-tokens`, `--seed` | sampling; unset values use the server's defaults. Each run and each pool agent gets its own seed offset from `--seed` |
-| `--extra-body JSON` | extra request fields, e.g. `'{"reasoning_effort": "high"}'`, `'{"top_k": 20}'`, `'{"chat_template_kwargs": {"enable_thinking": true}}'` |
-| `--max-context-tokens N` | client-side context cap; older tool outputs are shortened, then dropped |
-| `--max-steps N` | interaction limit (default 30) |
+| [Installation and data](docs/installation.md) | Optional dependencies, downloads, local data reuse, and ParamNet setup |
+| [Benchmark protocol](docs/benchmark.md) | Task definitions, scores, budget boundaries, simulated clocks, and pooling |
+| [Experiments and reproduction](docs/experiments.md) | CLI flags, item selection, repeat counts, paper settings, and ablations |
+| [Custom environments and API](docs/extending.md) | Task registration, backends, and Python examples |
+| [Outputs and source map](docs/reference.md) | JSON fields, aggregation outputs, and repository layout |
+| [Third-party notices](THIRD_PARTY_NOTICES.md) | Dataset sources, pinned revisions, and licenses |
 
-`summarize` averages repeats within an item, then items within a group, then groups:
-
-- **Tuning:** the three benchmark families get equal weight.
-- **Search:** *whois* and *whatis* get equal weight.
-- **Audit:** label accuracy and exact evidence-set accuracy are reported separately.
-
-A task's AVG is the mean of its headline metrics, and **Overall AVG** is the mean of the tuning, search and audit AVGs (shown when all three are present). Custom tasks are summarized by their primary metric.
-
-## Reproducing the paper's settings
-
-Single-agent evaluation (main results table), per model:
+## Development
 
 ```bash
-M=your-model
-python -m expgym run --task search --model $M --output runs
-python -m expgym run --task audit  --model $M --output runs
-python -m expgym run --task tuning --items nasbench101,nasbench201 --model $M --output runs
-python -m expgym run --task tuning --items paramnet --model $M --output runs   # in the Python 3.7 env
-python -m expgym summarize runs
+python -m pip install -e ".[dev]"
+python -m pytest -q
 ```
 
-That is 9 tuning tasks × 3 repeats, 73 questions and 13 documents × 3 orderings, each under the three regimes. The paper's generation settings for each model (output cap, sampling, reasoning effort) are listed in its appendix; pass them with `--max-tokens`, `--temperature`, `--top-p` and `--extra-body`.
+The core tests use synthetic fixtures and scripted backends. The NAS-Bench reference test is skipped when its data is absent. CI runs the core suite and offline CLI examples without API credentials.
 
-4-agent pools (PoolAct results table):
-
-```bash
-python -m expgym pool --task search --items whois --regimes moderate,tight --max-context-tokens 131072 --model $M --output pools
-python -m expgym pool --task audit  --regimes moderate,tight --max-context-tokens 131072 --model $M --output pools
-python -m expgym pool --task tuning --items nasbench101 --regimes moderate,tight --max-context-tokens 131072 --model $M --output pools
-python -m expgym summarize pools
-```
-
-Variations:
-
-- **Pool size:** `--agents 2`, `6` or `8` (results go to `<strategy>_n<N>` directories and appear as separate rows).
-- **Lock ablation:** `--strategies poolact --no-lock` (results go to `poolact-nolock_n<N>`).
-- **Budget sweep:** `--task search --items whois --regimes beta=1,beta=5,beta=10,beta=15,beta=20`.
-
-LLM sampling is stochastic, so expect run-to-run variance. The paper reports its variability across repeats in the appendix.
-
-## Adding your own environment
-
-An environment is one task instance. It exposes function-calling tools, charges a simulated cost for each call and scores the final answer:
-
-```python
-from expgym import register_task, run_agent, get_regime
-from expgym.envs.base import Environment, Task, ToolResult, ToolInputError, function_tool
-
-class MyEnv(Environment):
-    reference_cost = 3600.0                     # c_base: budget is beta * c_base
-
-    def task_prompt(self):                      # first user message
-        return "..."
-
-    def tools(self):                            # OpenAI function definitions
-        return [function_tool("measure", "Run one measurement.", {...json schema...})]
-
-    def call(self, name, arguments):            # raise ToolInputError for bad input (free)
-        return ToolResult(text="value=0.42", cost=3500.0)
-
-    def score(self, answer, observations):      # observations = results the agent saw
-        return {"accuracy": ...}
-
-class MyTask(Task):
-    name = "mytask"
-    def items(self): return ["0", "1", ...]
-    def make_env(self, item, repeat=0): return MyEnv(...)
-    def primary_metric(self): return "accuracy"
-    def vote(self, answers): ...                # combine pool answers
-
-register_task("mytask", MyTask)
-```
-
-Run it from the command line with `python -m expgym run --import path/to/my_task.py --task mytask ...` (pass the same `--import` to `summarize`).
-
-`examples/custom_environment.py` is a complete, runnable example: a compound-screening task in which every assay costs about an hour of simulated time. It includes single-agent and PoolAct runs. Environments can also override `describe_action`, `describe_outcome` and `coverage_note` to control how their actions appear in PoolAct's exploration graph, and `on_reuse` to react when a result is reused from another agent.
-
-## Python API
-
-```python
-from expgym import get_task, get_regime, run_agent, run_pool
-from expgym.llm import OpenAIChatBackend
-
-task = get_task("search")
-env = task.make_env("seed2/0")
-backend = OpenAIChatBackend("your-model", "https://your-endpoint/v1", api_key="...")
-result = run_agent(backend, env, get_regime("tight"))
-print(result["score"], result["feedback_cost"], result["termination"])
-
-pool = run_pool(task, "seed2/0", lambda env, i: OpenAIChatBackend(...), "poolact",
-                get_regime("tight"), n_agents=4)
-print(pool["aggregate"])
-```
-
-Any object with a `generate(messages, tools, tool_choice)` method that returns an `expgym.llm.ModelTurn` can serve as the backend.
-
-## Output format
-
-`expgym run` writes one file per trajectory, at `DIR/<model>/<task>/<regime>/<item>__r<repeat>.json`:
-
-| Field | Content |
-|---|---|
-| `run` | `kind` (`single` or `pool`), task, item, group, repeat, regime, model (pools also record `strategy` and `agents`) |
-| `answer`, `score` | the final answer and its metrics (tuning also reports `perf` and which rule scored it) |
-| `termination` | `answered`, `budget_exhausted`, `step_limit` or `invalid_response` |
-| `feedback_cost`, `budget` | simulated cost spent, and the budget `B` (`null` under `free`) |
-| `steps` | model turns, including the forced final answer |
-| `tool_calls` | every call, with its arguments, cost, `perf`, `reused` (shared-cache hit) and `visible` (whether the result was shown) |
-| `usage` | model calls, prompt/completion tokens and model latency |
-| `messages` | the complete conversation |
-| `summary` | the metrics printed while the sweep runs |
-
-`expgym pool` writes `DIR/<model>/<task>/<regime>/<strategy>_n<N>/<item>__r<repeat>.json`. Each file contains `aggregate` (the pool's score), the shared-cache statistics and the full record of every agent under `agents`.
-
-## Repository layout
-
-```
-expgym/
-  agent.py         ReAct loop, feedback regimes and budget accounting
-  poolact.py       naive / cached / PoolAct strategies, shared cache and exploration graph
-  llm.py           OpenAI-compatible backend and the scripted test backend
-  envs/            tuning (HPOBench + NAS-Bench tables), search (PhantomWiki), audit (ContractNLI), base classes
-  summary.py       aggregation used by `expgym summarize`
-  cli.py           command-line interface
-  resources/       random-search reference statistics, audit hypothesis orders, evidence hint labels
-scripts/download_data.py   fetch, verify and convert benchmark data
-examples/                  a custom environment
-tests/                     unit and end-to-end tests (`pytest`)
-```
+Bug reports and contributions are welcome through [issues](https://github.com/tiannuo-yang/expgym/issues) and pull requests. Include the command, Python version, and relevant error output when reporting a problem.
 
 ## Citation
+
+If you use ExpGym or PoolAct in your research, please cite *When Interaction Is the Bottleneck: Evaluating and Scaling Agents Under Costly Feedback*. The source release currently provides anonymous author metadata; the entry below preserves it pending a public bibliographic record.
 
 ```bibtex
 @inproceedings{expgym2026,
@@ -304,4 +175,4 @@ tests/                     unit and end-to-end tests (`pytest`)
 
 ## License
 
-The code is released under the MIT License. The benchmark data keep their original licenses; see [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
+Code is released under the [MIT License](LICENSE). Benchmark data retain their original licenses; see [third-party notices](THIRD_PARTY_NOTICES.md).

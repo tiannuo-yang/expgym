@@ -1,0 +1,33 @@
+name: Tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.9", "3.12"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install package and test dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e ".[dev]"
+      - name: Run core tests
+        run: python -m pytest -q
+      - name: Run README examples without an API key
+        run: |
+          python -m expgym run --task toy --backend scripted --output runs/quickstart
+          python -m expgym pool --task toy --backend scripted --regimes tight --strategies naive,cached,poolact --agents 4 --output runs/quickstart
+          python -m expgym summarize runs/quickstart
+          python examples/custom_environment.py

@@ -11,6 +11,11 @@ license = {text = "MIT"}
 requires-python = ">=3.7"
 dependencies = ["numpy"]
 
+[project.urls]
+Repository = "https://github.com/tiannuo-yang/expgym"
+Documentation = "https://github.com/tiannuo-yang/expgym#documentation"
+Issues = "https://github.com/tiannuo-yang/expgym/issues"
+
 [project.optional-dependencies]
 search = ["pyarrow"]
 data = ["huggingface_hub", "pyarrow"]
